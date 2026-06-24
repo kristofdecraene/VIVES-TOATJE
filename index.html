@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOATJE — VIVES Thuisopdracht Beoordelaar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js" onerror="window._noMammoth=true"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;font-size:14px;background:#f1f5f9;color:#1e293b;min-height:100vh}
+header{position:relative;background:#1e3a5f;color:#fff;padding:1.1rem 1.5rem 1.4rem;text-align:center}
+.hbrand{display:inline-flex;align-items:center;gap:.65rem;margin-bottom:.2rem}
+.lring{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;border:2px solid #e07020;background:rgba(255,255,255,.07);flex-shrink:0}
+.hletter{font-family:'Playfair Display',Georgia,serif;font-size:1.6rem;font-weight:700;color:#e07020;line-height:1}
+.htitle{font-family:'Playfair Display',Georgia,serif;font-size:2rem;font-weight:700;letter-spacing:.04em;line-height:1;color:#fff}
+.hsub{font-size:.88rem;font-weight:500;color:rgba(255,255,255,.85);margin-bottom:.1rem}
+.hcampus{font-size:.76rem;color:rgba(255,255,255,.52)}
+.hauthor{position:absolute;bottom:.55rem;right:1rem;font-size:.72rem;font-style:italic;color:rgba(255,255,255,.42)}
+#app{max-width:700px;margin:0 auto;padding:16px}
+.card{background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.1);padding:18px;margin-bottom:14px}
+.ct{font-size:14px;font-weight:700;color:#1e3a5f;padding-bottom:8px;margin-bottom:12px;border-bottom:2px solid #dbeafe}
+label{display:block;font-size:11px;font-weight:600;color:#475569;margin-bottom:3px;margin-top:9px}
+input,select,textarea{width:100%;border:1px solid #cbd5e1;border-radius:6px;padding:8px 10px;font-size:13px;background:#f8fafc;outline:none;font-family:inherit}
+input:focus,select:focus,textarea:focus{border-color:#3b82f6;background:#fff}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.krow{display:flex;gap:8px;align-items:center}
+.krow input{flex:1;font-family:monospace}
+.dz{border:2px dashed #93c5fd;border-radius:10px;padding:26px;text-align:center;cursor:pointer;background:#f0f7ff;transition:all .2s;user-select:none}
+.dz:hover,.dz.drag{border-color:#3b82f6;background:#dbeafe}
+.dz.ok{border-color:#22c55e;background:#f0fdf4}
+.btn{padding:9px 18px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-weight:600;transition:all .15s;font-family:inherit}
+.btn-p{background:#1e3a5f;color:#fff;width:100%;padding:13px;font-size:15px;margin-top:6px}
+.btn-p:hover{background:#2d4f7f}
+.btn-g{background:#15803d;color:#fff}
+.btn-g:hover{background:#16a34a}
+.btn-o{background:#fff;color:#1e3a5f;border:2px solid #1e3a5f}
+.btn-o:hover{background:#f0f7ff}
+.err-box{background:#fef2f2;border:1px solid #fca5a5;color:#b91c1c;padding:10px 14px;border-radius:8px;margin-bottom:12px;font-size:13px;display:none}
+.info{background:#eff6ff;border:1px solid #93c5fd;color:#1d4ed8;padding:7px 11px;border-radius:6px;font-size:11px;margin-top:5px}
+#lp{text-align:center;padding:60px 20px;display:none}
+.sp{width:48px;height:48px;border:4px solid #dbeafe;border-top-color:#1e3a5f;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 14px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.crit{border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;margin-bottom:9px}
+.ch{background:#f1f5f9;border-bottom:1px solid #e2e8f0;padding:8px 13px;display:flex;justify-content:space-between;align-items:center}
+.cn{font-weight:700;font-size:13px;color:#1e3a5f}
+.cs{font-weight:800;font-size:15px}
+.cb{padding:9px 13px}
+.lb{display:block;width:100%;text-align:left;padding:6px 10px;margin-bottom:3px;border-radius:6px;border:1px solid #e2e8f0;background:#f8fafc;color:#475569;cursor:pointer;font-size:11px;font-family:inherit;transition:all .1s}
+.lb:hover{border-color:#93c5fd;background:#eff6ff}
+.lb.on{background:#f0fdf4;border-color:#22c55e;color:#14532d;font-weight:700}
+.lb.onb{background:#fef2f2;border-color:#ef4444;color:#7f1d1d;font-weight:700}
+.ls{font-family:monospace;margin-right:5px;font-weight:700}
+.fba{width:100%;margin-top:5px;padding:6px 8px;font-size:11px;border:1px solid #e2e8f0;border-radius:6px;resize:none;overflow:hidden;min-height:32px;background:#fafafa;font-family:inherit;box-sizing:border-box}
+.ckr{display:flex;align-items:flex-start;gap:8px;margin-bottom:5px;font-size:12px;cursor:pointer;line-height:1.4}
+.ckr input{width:14px;height:14px;cursor:pointer;margin-top:2px;flex-shrink:0}
+.ab{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:4px}
+.anote{text-align:center;font-size:11px;color:#94a3b8;font-style:italic;margin-top:8px}
+.stags{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
+.stag{font-size:10px;padding:2px 7px;border-radius:12px;font-weight:600}
+</style>
+</head>
+<body>
+<header>
+  <div class="hbrand">
+    <div class="lring"><span class="hletter">T</span></div>
+    <h1 class="htitle">TOATJE</h1>
+  </div>
+  <p class="hsub">Thuisopdracht Analyse Tooltje</p>
+  <p class="hcampus">VIVES Campus Torhout &mdash; Lerarenopleiding Geschiedenis</p>
+  <p class="hauthor">Kristof De Craene (2026)</p>
+</header>
+<div id="app">
+  <div class="err-box" id="err"></div>
+  <!-- FORMULIER -->
+  <div id="fp">
+    <div class="card">
+      <div class="ct">&#128273; Gemini API-sleutel</div>
+      <div id="key-saved-row" style="display:none;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
+        <span style="color:#15803d;font-weight:600;font-size:13px">&#10004; API-sleutel opgeslagen in je browser</span>
+        <button class="btn btn-o" style="padding:5px 12px;font-size:12px" onclick="clearKey()">Verwijderen</button>
+      </div>
+      <div id="key-input-row">
+        <label>Sleutel</label>
+        <div class="krow">
+          <input type="password" id="ikey" placeholder="AIzaSy…" autocomplete="off" spellcheck="false">
+          <button class="btn btn-o" id="ibtn-eye" onclick="toggleKeyVis()" style="flex-shrink:0;padding:8px 12px" title="Toon/verberg">&#128065;</button>
+          <button class="btn btn-p" onclick="saveKey()" style="flex-shrink:0;width:auto;padding:8px 14px">Opslaan</button>
+        </div>
+      </div>
+      <div class="info">Gratis sleutel via <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener">Google AI Studio</a> (geen creditcard). Lokaal opgeslagen &mdash; nooit doorgestuurd.</div>
+    </div>
+    <div class="card">
+      <div class="ct">&#128196; Studentenwerkstuk</div>
+      <div class="dz" id="dz"
+           onclick="document.getElementById('fi').click()"
+           ondragover="event.preventDefault();this.classList.add('drag')"
+           ondragleave="this.classList.remove('drag')"
+           ondrop="handleDrop(event)">
+        <div style="font-size:28px;margin-bottom:5px" id="dzic">&#128194;</div>
+        <div id="dzt" style="font-size:13px;color:#475569">Sleep een PDF of DOCX hierheen, of klik om te bladeren</div>
+        <div id="dzs" style="font-size:11px;color:#94a3b8;margin-top:3px">PDF aanbevolen voor documenten met afbeeldingen</div>
+      </div>
+      <input type="file" id="fi" accept=".pdf,.docx" style="display:none" onchange="handleFileSelect(event)">
+    </div>
+    <div class="card">
+      <div class="ct">&#9881; Instellingen</div>
+      <div class="r2">
+        <div>
+          <label>OPO-naam *</label>
+          <input type="text" id="iopo" placeholder="bijv. Vakdidactiek 1" oninput="S.opo=this.value;ls('vo',this.value)">
+        </div>
+        <div>
+          <label>Datum *</label>
+          <input type="date" id="idat">
+        </div>
+      </div>
+      <label>Thuisopdracht (TO) *</label>
+      <select id="ito" onchange="S.toNum=this.value"><option value="">&#8212; Kies het TO-nummer &#8212;</option></select>
+      <label>Naam student <span style="font-weight:400;color:#94a3b8">(optioneel &mdash; wordt automatisch herkend)</span></label>
+      <input type="text" id="inm" placeholder="Vul in als auto-herkenning niet werkt" oninput="S.naam=this.value">
+    </div>
+    <button class="btn btn-p" onclick="handleGenerate()">&#128269; Genereer beoordeling</button>
+    <p class="anote">Mens&ndash;AI&ndash;mens &middot; Google Gemini 2.0 Flash &middot; ~15&ndash;40 sec per opdracht</p>
+  </div>
+  <!-- LADEN -->
+  <div id="lp">
+    <div class="sp"></div>
+    <p id="lmsg" style="color:#1e3a5f;font-weight:600;font-size:15px">Verwerken...</p>
+    <p style="color:#94a3b8;font-size:12px;margin-top:5px">Dit duurt 15&ndash;45 seconden.</p>
+  </div>
+  <!-- RESULTAAT (dynamisch gevuld) -->
+  <div id="rp"></div>
+</div>
+<script>
+/* ============================================================
+   TO-VEREISTEN (alle 30)
+============================================================ */
+var TO = {
+1:{n:"Historische Jeugdroman",
+i:"- Beschrijving boek: auteur, titel, periode, uitgeverij, ISBN, pagina's, doelgroep, genre\n- Samenvatting (1 p.) + situering in tijd en ruimte (2 p.)\n- Representatief fragment letterlijk opgenomen + afbeelding cover\n- Doelgroep 10-16 jr., verschenen na 2000, aansluit bij bestudeerd tijdvak",
+d:"Kies 1 optie:\n- A: 5 foto's/afbeeldingen + uitleg hoe leerlingen tot historisch inzicht komen\n- B: Boekpromotiefolder A4 r/v (literair + historisch)\n- C: Vergelijking fictief vs. historisch personage (uitzicht, gegevens, karakter, daden + illustraties)\n- D: Historisch correcte tekening van passage + 1 anachronisme"},
+2:{n:"Historisch Stripverhaal",
+i:"- Beschrijving strip: auteur, titel, periode, uitgeverij, ISBN, doelgroep\n- Samenvatting (1 p.) + situering in tijd en ruimte (2 p.)\n- 3 historisch interessante striptekeningen toegevoegd + afbeelding cover",
+d:"- Bij elk van de 3 striptekeningen: primaire beeldbron om historische correctheid te vergelijken\n- Instructies + richtvragen met modelantwoorden voor leerlingen\n- Contextualisering van de primaire bronnen"},
+3:{n:"Museumbezoek",
+i:"- Verslag (max. 1 p.): domeinen socialiteit, artistiek vs. niet-artistiek, thematisch vs. globaal, weergave, eindoordeel\n- 5 foto's/afbeeldingen: elk gesitueerd in tijd en ruimte met functie/betekenis, voldoende variatie\n- Toegangsbewijs + foto student voor museum (aanwezig)",
+d:"- Didactische oefening bij 3 foto's: vragen voor leerlingen + modelantwoorden\n- Organisatieplan klasbezoek 20 leerlingen: verplaatsing, formule, duur, kostprijs + motivatie"},
+4:{n:"Tentoonstelling",
+i:"- Verslag (max. 1 p.): domeinen socialiteit, artistiek vs. niet-artistiek, thematisch vs. globaal, weergave, eindoordeel\n- 5 foto's/afbeeldingen: gesitueerd met functie/betekenis, variatie\n- Toegangsbewijs + foto student (aanwezig)",
+d:"- Didactische oefening bij 3 foto's: vragen + modelantwoorden\n- Plan om leerlingen warm te maken voor zelfstandig/gezinsbezoek + motivatie"},
+5:{n:"Lezing / Rondleiding / Workshop",
+i:"- Verslag bijgewoonde activiteit met focus op historische inhoud (2 p.)\n- Bewijs van deelname aanwezig\n- VERPLICHT: expliciete koppeling aan DE 10 VRAGEN over de middeleeuwse stad ('De herleving van de steden in tien vragen') uit de cursus.\nDe 10 vragen:\n  1. Waarom/waar/hoe ontstaan opnieuw steden? (bevolkingsgroei ±1000, veiligheid, waterwegen, handelskernen)\n  2. Vanaf wanneer is er sprake van een 'stad'? (keuren, juridische/militaire/bestuurlijke vrijheden)\n  3. Hoe ziet een middeleeuwse stad eruit? (omwalling, markt, belfort, houtbouw vs. steen)\n  4. Wie doet wat? (kooplui, handwerkslieden, taakverdeling)\n  5. Waarom zijn er gilden, ambachten en Hanzen? (monopolie, kwaliteitscontrole, solidariteit)\n  6. Zijn alle mensen gelijk in de stad? (patriciaat, ambachtslui, werklieden, marginalen, joden)\n  7. Waar worden producten verhandeld? (lokale markt, jaarmarkten Champagne, actieve vs. passieve handel, Brugge)\n  8. Waarom is Vlaamse lakennijverheid bijzonder? (Engelse wol, arbeidsdeling, export)\n  9. Hoe wordt het bestuur uitgeoefend? (patriciaat, keuren, rechtspleging, straffen)\n  10. Hoe middeleeuws is de stad Brugge? (authenticiteit, neo-stijlen, Delacenserie, historisch grondplan)",
+d:"- Bronnenoefening geïnspireerd door de bijgewoonde activiteit\n- Naar analogie Storia HD Classic 3: 2 p. met minstens 3 bronnenoefeningen voor leerlingen 2de graad SO\n- Bronnen met vragen + antwoordsleutel, aandacht voor contextualisering"},
+6:{n:"Website",
+i:"- Verslag (2 p.): correcte URL, beschrijving organisatie, beschrijving opbouw website\n- 5 geselecteerde bronnen/teksten/artikels + gemotiveerde keuze\n- Website uitgaande van officiële instantie, voertaal NL/FR/EN/DE",
+d:"- Werkblad (max. 3 p., met modelantwoorden) om website zinvol te verkennen\n- Vertrek vanuit 'historische onderzoeksvraag', stapsgewijze bronnen bevragen\n- Structuur + samenhang met bindteksten, variatie in bronnen en opdrachten"},
+7:{n:"Documentaire (★ verplicht VD1)",
+i:"- Omschrijving: maker, titel, verschijningsdatum, duur\n- Samenvatting (1 p.) + situering in tijd en ruimte (2 p.)\n- Fragment max. 5 min: inhoud beschreven + gesitueerd in de documentaire\n- Afbeelding cover; fragment digitaal ingediend (aanwezig)\n- Nederlandstalig of met NL ondertiteling",
+d:"- Koppeling fragment aan specifieke les + grondige motivatie (waarom in die lesfase, wat brengt het bij)\n- 3 KIJKVRAGEN + 3 LUISTERVRAGEN + modelantwoorden"},
+8:{n:"Speelfilm",
+i:"- Omschrijving: regisseur, titel, verschijningsdatum, duur\n- Samenvatting (1 p.) + situering in tijd en ruimte (2 p.)\n- Fragment max. 5 min: inhoud beschreven + gesitueerd in de film\n- Afbeelding cover; fragment digitaal ingediend (aanwezig)\n- Nederlandstalig of met NL ondertiteling",
+d:"- Koppeling fragment aan specifieke les + grondige motivatie\n- 3 KIJKVRAGEN + 3 LUISTERVRAGEN + modelantwoorden"},
+9:{n:"Monografie",
+i:"- Beschrijving: auteur, titel, periode, uitgeverij, ISBN, doelgroep\n- Samenvatting (2 p.) + situering in tijd en ruimte (2 p.)\n- Representatief fragment letterlijk opgenomen + afbeelding cover",
+d:"- Min. 2 recensies opgenomen met duidelijke verwijzing\n- (Fictieve) brief aan de auteur: appreciatie/kritiek, vragen, bedenkingen – GEEN puur fan-brief\n- Uit brief blijkt kritisch lezen van boek én recensies"},
+10:{n:"Literaire Bron",
+i:"- Beschrijving: auteur, titel, periode, uitgeverij, ISBN, doelgroep\n- Samenvatting (1 p.) + biografie auteur (1 p.) + koppeling aan Zeitgeist van dat moment (1 p.)\n- Afbeelding cover",
+d:"- 5 fragmenten uit primaire bron bruikbaar voor geschiedenisonderwijs\n- Per fragment: in welke les, wat aantonen, welke translatievragen stellen"},
+11:{n:"10 Werktuigen (★ verplicht VD2)",
+i:"- 10 primaire bronnen: werktuigen uit LANDBOUW OF NIJVERHEID (ancien régime)\n- Per werktuig: naam, gebruik, materiaal, productiewijze, krachtbron, verwante huidige werktuigen (min. 1 + afb.), voorlopers\n- Hoge kwaliteit afbeeldingen, contextualisering, bronvermelding",
+d:"- 1 oefening voor leerlingen (bij voorkeur combineeroefening: primaire bron, naam, functie, voorlopers, huidige varianten)\n- Modelantwoorden"},
+12:{n:"10 Munten/Penningen",
+i:"- 10 munten/penningen uit een historisch tijdvak\n- Representatief voor het muntwezen + inclusief munten andere culturen/continenten\n- Per munt: afbeelding BEIDE zijden (goede kwaliteit), contextualisering (wie/wat/waar/wanneer), translatie",
+d:"- Koppeling elke munt aan specifieke les in leermateriaal SO (koppeling logisch + gemotiveerd?)\n- Didactische opdracht bij 2 munten voor leerlingen"},
+13:{n:"10 Citaten",
+i:"- 10 citaten van 10 VERSCHILLENDE personen uit het bestudeerde tijdvak\n- Per citaat: originele taal + Nederlandse vertaling\n- Per persoon: biografie (0,5 p.) gesitueerd in tijd en ruimte",
+d:"- Bij 2 citaten: onderzoek hoe ze doorheen de tijd gebruikt/gerecupereerd worden (speeches, reclame, tatoeages, cartoons)\n- Per citaat: 5 toepassingen + beoordeling of betekenis overeenkomt met originele intentie"},
+14:{n:"10 Kunstwerken",
+i:"- 10 kunstwerken uit een historisch tijdvak\n- Selectie: schilderijen/tekeningen, gebouwen EN beeldhouwwerken; uit minstens 3 CONTINENTEN\n- Per kunstwerk ingevulde steekkaart:\n  BOUWKUNST: naam, locatie, bouwdata, opdrachtgever, architect, functie, historiek, materialen, afmetingen, bouwstijl, typische stijlkenmerken, bijzonderheden, bibliografie\n  BEELDHOUWKUNST: naam, locaties (creatie + huidig), datering, opdrachtgever, beeldhouwer, functie, historiek, materialen, afmetingen, kunststroming, stijlkenmerken, iconografie/symboliek, bijzonderheden, bibliografie\n  SCHILDERKUNST: naam, locaties, datering, opdrachtgever, kunstenaar, functie, historiek, materialen, afmetingen, kunststroming, stijlkenmerken, iconografie/symboliek, bijzonderheden, bibliografie",
+d:"- Didactische opdracht bij 3 kunstwerken: stijlkenmerken kunststroming aan bod voor leerlingen\n- Werkvormen: aanduiden, vergelijken, beschrijven\n- Modelantwoorden"},
+15:{n:"10 Werelderfgoedlijstitems (★ verplicht VD1)",
+i:"- 10 culturele UNESCO-items (geen natuur) uit bestudeerd tijdvak\n- Wereldwijde selectie (elk continent)\n- Per item: foto, ligging, datering, korte geschiedenis, waarom op de lijst",
+d:"- Koppeling elk item aan specifieke les in leermethode SO (koppeling logisch + gemotiveerd?)\n- Didactische opdracht bij 2 NIET-EUROPESE items: kennismaking + besef van gelijktijdige ontwikkelingen buiten Europa"},
+16:{n:"10 Krantenartikels (★ verplicht Prehistorie/ONO)",
+i:"- 10 recente NL-talige artikels uit: De Standaard, De Morgen, De Tijd, NRC Handelsblad, Knack, National Geographic\n- Max. 2 jaar oud bij examen; artikels bijgevoegd; correcte bronvermelding (bron, datum, auteur)\n- Per artikel: ±10 regels over nieuwe inzichten + begrippenlijst (min. 5 termen in eigen definitie)\n- Koppeling aan syllabus prehistorie/ONO",
+d:"- Werkblad (max. 3 p., zonder artikel, met modelantwoorden) bij 1 geselecteerd artikel\n- Aandacht voor: contextualisering, translatie- en interpretatiefase, synthese"},
+17:{n:"10 Vlaggen",
+i:"- 10 vlaggen van staten/regio's/deelstaten horend bij het historisch tijdvak\n- Per vlag: van welk gebied, periode in gebruik, beschrijving, betekenis, reden\n- Per vlag: hedendaagse foto waarop vlag te zien is tijdens evenement + uitleg evenement + verklaring aanwezigheid",
+d:"- 3 concrete toepassingen hoe vlaggen in de lespraktijk te gebruiken, elk concreet uitgewerkt"},
+18:{n:"10 Spotprenten",
+i:"- 10 spotprenten/cartoons uit bestudeerd tijdvak\n- Elke spotprent gemaakt TIJDENS het tijdvak, verwijst naar ANDERE gebeurtenis\n- Per spotprent: situering in tijd en ruimte, context (naar aanleiding van welke gebeurtenis)\n- Per spotprent: verklaring (wat voorgesteld, welk standpunt tekenaar)",
+d:"- 2 cartoons geselecteerd: koppeling aan les + wat de cartoon bijbrengt\n- Bij elk: oefening waarbij leerlingen iets AANDUIDEN of INKLEUREN\n- Bron behandeld als primaire bron: contextualisering, translatie, interpretatie"},
+19:{n:"Tijdlijn (★ verplicht Klassieke Oudheid)",
+i:"- Digitale tijdlijn over de klassieke oudheid\n- Min. 200 GEBEURTENISSEN + min. 50 AFBEELDINGEN\n- Domeinen van de socialiteit (socio-economisch, socio-politiek, socio-cultureel) als ordenend principe",
+d:"- 5 oefeningen op leren lezen/interpreteren van tijdlijn + modelantwoorden\n- Gebaseerd op eigen tijdlijn; niveau 2de jaar SO; variatie in opdrachtvormen"},
+20:{n:"Minitentoonstelling",
+i:"- Boeiend thema met veel visuele primaire bronnen (weinig aan bod in leerboeken)\n- ±20 kwalitatieve afbeeldingen van primaire bronnen; logische opbouw\n- 20 PANELEN (A3): beeld primeert op tekst, max. 2 afb./paneel, korte uitleg, bronvermelding",
+d:"- Leerlingvriendelijke tekst (A4 r/v, max. 2 p.) als begeleiding bij de tentoonstelling\n- Bedoeld om gekopieerd te worden voor leerlingen"},
+21:{n:"Wikipedia",
+i:"- 3 nieuwe Wikipedia-lemmata over bestudeerd tijdvak (vooraf goedgekeurd door lector)\n- Onderbouwde, vlotte, goed gestructureerde, ZELFGESCHREVEN teksten\n- Elk lemma voorzien van beeldmateriaal; screenshots bijgevoegd\n- Min. 2 weken voor indienen op Wikipedia geplaatst; Wikipedia-richtlijnen gevolgd; aanvaard of bijgestuurd",
+d:"GEEN apart vakdidactisch luik. Beoordeel de didactische kwaliteit van de Wikipedia-artikels zelf: structuur, brongebruik, toegankelijkheid voor breed publiek, encyclopedische stijl, gebruik van afbeeldingen."},
+22:{n:"Historisch Koken",
+i:"- Maaltijd 3 gangen met historische recepten uit bestudeerd tijdvak\n- Per gerecht: naam, periode, ingrediënten, werkwijze, bronvermelding\n- Recepten effectief uitgeprobeerd; foto's maaltijd + 'the making of'\n- Beoordeling haalbaarheid/bruikbaarheid in klas + eigen appreciatie",
+d:"- Instructiefilmpje voor 1 gerecht (aanwezig verondersteld)\n- Voor leerlingen: ingrediëntenlijst (met hedendaagse vervangingen), werkwijze, technische fiche"},
+23:{n:"Kledingstuk / Gebruiksvoorwerp / Maquette",
+i:"KLEDINGSTUK/GEBRUIKSVOORWERP: naam, periode, primaire bron ter inspiratie, materiaallijst + werkwijze, fotoreportage 'making of', foto's eindresultaat, technische fiche, eigen appreciatie + beoordeling haalbaarheid\nMAQUETTE: naam, situering (2 p.), primaire bron ter inspiratie, materiaallijst + werkwijze, fotoreportage 'making of', foto's eindresultaat, technische fiche, eigen appreciatie + beoordeling haalbaarheid",
+d:"KLEDINGSTUK: Didactische oefening waarbij leerlingen de sociale klasse van het kledingstuk onderzoeken + modelantwoord\nMAQUETTE: Werkblad voor leerlingen (onderdelen, technische aspecten, vergelijking bronnen) + modelantwoorden"},
+24:{n:"Omgevingsonderwijs",
+i:"- 5 elementen uit eigen omgeving die getuigen van het bestudeerde tijdvak\n- Per element: duidelijke foto\n- Per element: situering in tijd en ruimte (1 p.)\n- Per element: tekst over erfgoedwaarde + hoe het in de kijker wordt gezet (1 p.)",
+d:"- Didactische oefening bij 2 van de 5 elementen\n- Uitgangspunt: met leerlingen ter plekke + kennismaking met erfgoedwaarde van de site\n- Modelantwoorden"},
+25:{n:"Op Stap met Ferraris (★ verplicht Vroegmoderne Tijd)",
+i:"- Via www.geopunt.be Ferrariskaart van eigen woonplaats geraadpleegd\n- 5 GEBOUWEN op Ferrariskaart met nog huidig spoor + screenshot + historische uitleg\n- 5 WEGEN op Ferrariskaart met nog huidig spoor + screenshot + historische uitleg\n- 5 TOPONIEMEN op Ferrariskaart met nog huidig spoor + screenshot + historische uitleg",
+d:"- Fiets- of wandeltocht met duidelijke route die de 15 items verbindt (veilig + autoluw)\n- Formule gekozen (gegidst, papieren bundel, digitaal/QR-codes, zoektocht)\n- Getest door proefkonijnen met feedback toegevoegd\n- Bundel of beeldmateriaal ingediend"},
+26:{n:"Stadsbezoek Brugge (★ verplicht VD2)",
+i:"- Bezoek aan historisch Brugge volgens traject excursiebrochure\n- Verplichte bezoeken: museaal gedeelte OLV-kerk, Gotische Zaal Brugse Stadhuis, Schepenkamer Brugse Vrije\n- Fotowandeling: Minnewater, Begijnhof, OLV-kerk, Stadhuis/Burg, Belfort, Markt, diverse gebouwen\n- Alle vragen uit brochure beantwoord: bouwstijlen (Romaans/Gotiek/Renaissance/Barok), stadsgeschiedenis, waterhuishouding (Reie, Zwin, Damme), sociale klassen (patriciërs, ambachtslui), handelsfuncties (lakennijverheid, natiehuis, Ter Beurse), middeleeuwse gebouwen (kerkelijk, publiek, privé)\n- Ingevulde brochure + bewijsstukken (foto's, tickets) ingediend",
+d:"- Activerende werkvorm (doe-activiteit) bij 2 ZELF GEKOZEN bezochte locaties voor leerlingen 2DE GRAAD SO\n- Per werkvorm: welk(e) leerdoel(en) worden beoogd"},
+27:{n:"Bezoek Frontzone WOI",
+i:"- Bezoek frontzone Ieper/Westhoek volgens traject excursiebrochure\n- Alle bezoeken en opdrachten uitgevoerd:\n  * Menenpoort (Last Post, namen vermiste soldaten)\n  * Soldatenfriedhof Langemark (9 vragen: consolidatie, kaart België, beheerder, aantallen, Kameradengrab, identificatie, militaire graden, schilden, vergelijkende beschrijving)\n  * Yorkshire Trench/Deep Dugout (plattegrond, dug-out definitie, diepte, bereikbaarheid, constructie)\n  * Essex Farm/McCraesite (noodwoning, plattegrond tekenen, link In Flanders Fields)\n  * Talbot House Poperinge (bedoeling, omgang lokale bevolking met Britse soldaten)\n  * Lijssenthoek Military Cemetery/Remy Siding (nationaliteiten, Chinese Labour Corps, Amerikanen, steentjes op graven)\n  * Sanctuary Wood Museum Hill 62 (loopgraaf-terminologie EN/FR/DE)\n  * Contextuele WOI-vragen beantwoord (aanleiding, verloop, loopgravenoorlog, nieuwe wapens, dieren, eindoffensief)\n- Ingevulde brochure + bewijsstukken (foto's, tickets) ingediend",
+d:"- Activerende werkvorm bij 2 ZELF GEKOZEN locaties voor leerlingen 3DE GRAAD SO (NIET 2de graad!)\n- Per werkvorm: welk(e) leerdoel(en) worden beoogd"},
+28:{n:"Mijn Familie in Historisch Perspectief (★ verplicht VD3)",
+i:"- Stamboom min. 4 generaties (ouders, grootouders, overgrootouders)\n- Per generatie: geboortedatum, huwelijksdatum, kinderen, overlijden, woonplaats, beroep, foto/bidprentje indien beschikbaar\n- Beschrijving zoekproces + kwartierstaat opgemaakt\n- 10 historische gebeurtenissen: welke voorouders leefden toen, hoe oud, inschatting van de impact",
+d:"- Tekst met:\n  1. Kansen en mogelijkheden van deze opdracht voor leerlingen\n  2. Valkuilen bij deze opdracht"},
+29:{n:"Game",
+i:"- Beschrijving game: ontwikkelaar, opzet, historisch decor, ontwikkelingsperiode\n- Onderzoek hoe makers historische correctheid nastreefden (experten geraadpleegd?)\n- Situering historisch decor in tijd en ruimte (1 p.)\n- Globale beoordeling historische correctheid + 5 voorbeelden (screenshot element game vs. historisch bronnenmateriaal)",
+d:"- 1 concrete uitgewerkte toepassing: hoe gebruik je deze game in de lespraktijk?"},
+30:{n:"Eigen Voorstel",
+i:"Vrij voorstel, individueel goedgekeurd door lector. Altijd zowel inhoudelijk als vakdidactisch luik.\nBeoordeel op basis van wat de student beschrijft als verwachte output in het werkstuk.",
+d:"Vrij voorstel. Beoordeel op basis van de beschrijving van de student."}
+};
+
+/* ============================================================
+   RUBRIC
+============================================================ */
+var RUB = {
+ts:[
+  {s:4,d:"De teksten zijn heel vlot geschreven. De structuur is helder."},
+  {s:3,d:"De teksten zijn taalkundig correct geschreven. De structuur is helder."},
+  {s:1,d:"In de teksten komen hier en daar taalkundige slordigheden voor. De structuur is niet zo helder."},
+  {s:-1,d:"In de teksten komen veel taalkundige slordigheden voor. Structuur ontbreekt."},
+  {s:-2,d:"In de teksten komen nog meer dan 10 werkwoordsfouten of andere grove taalfouten voor."}
+],
+il:[
+  {s:5,d:"Het inhoudelijk luik van deze thuisopdracht is excellent uitgewerkt en overstijgt ruimschoots de verwachtingen."},
+  {s:4,d:"Het inhoudelijk luik van deze thuisopdracht is heel goed uitgewerkt en overstijgt de verwachtingen."},
+  {s:3,d:"Het inhoudelijk luik van deze opdracht is goed uitgewerkt."},
+  {s:2,d:"Het inhoudelijk luik van deze opdracht is voldoende uitgewerkt."},
+  {s:0,d:"Het inhoudelijk luik van deze opdracht is onvoldoende uitgewerkt. Het voldoet niet aan de verwachtingen."}
+],
+vl:[
+  {s:5,d:"Het didactisch luik van deze thuisopdracht is excellent uitgewerkt en overstijgt ruimschoots de verwachtingen."},
+  {s:4,d:"Het didactisch luik van deze thuisopdracht is heel goed uitgewerkt en overstijgt de verwachtingen."},
+  {s:3,d:"Het didactisch luik van deze opdracht is goed uitgewerkt."},
+  {s:2,d:"Het didactisch luik van deze opdracht is voldoende uitgewerkt."},
+  {s:0,d:"Het didactisch luik van deze opdracht is onvoldoende uitgewerkt. Het voldoet niet aan de verwachtingen."}
+],
+br:[
+  {s:4,d:"Er is een uitgebreide, duidelijke en correcte bronvermelding volgens de APA-richtlijnen. De geraadpleegde bronnen zijn relevant en kwalitatief."},
+  {s:2,d:"Er is een uitgebreide, duidelijke en correcte bronvermelding. De geraadpleegde bronnen zijn relevant."},
+  {s:1,d:"Er wordt op een correcte manier verwezen naar de meest relevante bronnen die voor het werkstuk werden geraadpleegd."},
+  {s:0,d:"De bronvermelding is niet correct of niet volledig. De gebruikte bronnen zijn niet kwalitatief."},
+  {s:-2,d:"De bronnen die gebruikt werden om de thuisopdracht uit te werken worden niet vermeld. Delen van de tekst zijn letterlijk overgenomen uit andere bronnen en dit zonder persoonlijke verwerking en/of bronvermelding."}
+]
+};
+
+/* ============================================================
+   HULPFUNCTIES
+============================================================ */
+function today(){return new Date().toISOString().slice(0,10);}
+function ls(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+function lg(k){try{return localStorage.getItem(k)||'';}catch(e){return '';}}
+
+function nl2br(s){
+  if(!s)return '';
+  var r='';
+  for(var i=0;i<s.length;i++){
+    var c=s.charCodeAt(i);
+    if(c===10)r+='<br>';
+    else if(c!==13)r+=s.charAt(i);
+  }
+  return r;
+}
+
+function esc(s){
+  if(!s)return '';
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function readB64(file){
+  return new Promise(function(res,rej){
+    var r=new FileReader();
+    r.onload=function(){res(r.result.split(',')[1]);};
+    r.onerror=rej;
+    r.readAsDataURL(file);
+  });
+}
+
+function extractJSON(raw){
+  var start=raw.indexOf('{');
+  if(start===-1)return null;
+  var depth=0,inStr=false,esc2=false;
+  for(var i=start;i<raw.length;i++){
+    var c=raw[i];
+    if(esc2){esc2=false;continue;}
+    if(c==='\\'&&inStr){esc2=true;continue;}
+    if(c==='"'){inStr=!inStr;continue;}
+    if(inStr)continue;
+    if(c==='{')depth++;
+    if(c==='}'){depth--;if(depth===0)return raw.slice(start,i+1);}
+  }
+  return null;
+}
+
+function calcScore(sc){
+  if(!sc)return 0;
+  var t=(sc.ind?sc.ind.s:0)+(sc.ts?sc.ts.s:0)+(sc.il?sc.il.s:0)+(sc.vl?sc.vl.s:0)+(sc.br?sc.br.s:0);
+  if(sc.eb){t+=(sc.eb.fd?2:0)+(sc.eb.gi?2:0)+(sc.eb.zr?1:0);}
+  // allesCriteria: automatisch +1 als alle 5 basiscriteria score >= 1
+  var allMet=(sc.ind&&sc.ind.s>=1)&&(sc.ts&&sc.ts.s>=1)&&(sc.il&&sc.il.s>=1)&&(sc.vl&&sc.vl.s>=1)&&(sc.br&&sc.br.s>=1);
+  if(allMet)t+=1;
+  if(sc.eb)sc.eb.ac=allMet; // sync for Word doc
+  if(sc.em){t+=(sc.em.gr?-1:0)+(sc.em.tl?-1:0);}
+  return Math.max(0,Math.min(20,t));
+}
+
+function buildPrompt(n){
+  var to=TO[n];
+  if(!to)return '';
+  return 'Je bent een expert beoordelaar voor thuisopdrachten van eerstejaars studenten geschiedenis in de professionele bachelor lerarenopleiding aan VIVES Hogeschool (campus Torhout, Belgie). Evalueer objectief en constructief.\n\nBEOORDELINGSCRITERIA (gebruik EXACT deze scores per niveau):\n\nINDIENEN - Bevat het werkstuk een voorblad met naam student, onderwerp en type thuisopdracht?\n  level 1 -> score +1 (aanwezig)\n  level 2 -> score -1 (ontbreekt)\n\nTAAL & STRUCTUUR:\n  level 1 -> score +4: heel vlot geschreven, heldere structuur\n  level 2 -> score +3: taalkundig correct, heldere structuur\n  level 3 -> score +1: hier en daar slordigheden, structuur niet zo helder\n  level 4 -> score -1: veel slordigheden, structuur ontbreekt\n  level 5 -> score -2: meer dan 10 werkwoordsfouten of andere grove taalfouten\n\nUITWERKING INHOUDELIJK LUIK:\n  level 1 -> score +5: excellent, overstijgt ruimschoots de verwachtingen\n  level 2 -> score +4: heel goed, overstijgt de verwachtingen\n  level 3 -> score +3: goed uitgewerkt\n  level 4 -> score +2: voldoende uitgewerkt\n  level 5 -> score 0: onvoldoende, voldoet niet aan de verwachtingen\n\nUITWERKING VAKDIDACTISCH LUIK (zelfde niveaus als inhoudelijk)\n\nBRONNEN:\n  level 1 -> score +4: uitgebreide, correcte APA + relevante kwalitatieve bronnen\n  level 2 -> score +2: uitgebreide, correcte bronvermelding + relevante bronnen\n  level 3 -> score +1: correcte verwijzing naar meest relevante bronnen\n  level 4 -> score 0: bronvermelding niet correct of onvolledig, bronnen niet kwalitatief\n  level 5 -> score -2: bronnen niet vermeld OF letterlijk overgenomen zonder verwerking/bronvermelding\n\nEXTRA BONUS (combineerbaar):\n  frisseDidactiek (+2): werkstuk springt in het oog door frisse didactische uitwerking\n  grondigeInhoud (+2): werkstuk springt in het oog door inhoudelijk grondige uitwerking\n  zelfreflectie (+1): student heeft een zelfreflectie ingediend (5 vragen beantwoord)\n  allesCriteria (+1): AUTOMATISCH toegekend als indienen, taal, inhoudelijk, vakdidactisch en bronnen elk score >= 1 hebben\n\nEXTRA MALUS (combineerbaar):\n  geenReflectie (-1): geen zelfreflectie ingediend\n  teLang (-1): student slaagde er niet in zich te beperken (lengte, illustraties, oefeningen)\n\nEindscore = max(0, min(20, som van alle scores))\n\nALGEMENE VEREISTEN (alle TOs):\n- Zelfreflectie op het einde: 5 vragen beantwoord (zinvol? wat bijgeleerd? impact lespraktijk? tijdsinvestering? wat anders aanpakken?)\n- Correcte bronvermelding (voorkeur APA)\n- Eigen teksten, geen copy-paste\n- Voorblad met naam, onderwerp, type TO\n\nSPECIFIEKE VEREISTEN VOOR TO '+n+': '+to.n+'\n\nINHOUDELIJK LUIK:\n'+to.i+'\n\nVAKDIDACTISCH LUIK:\n'+to.d+'\n\nFEEDBACKRICHTLIJNEN:\n- Schrijf in het Nederlands, gebruik "je" (tutoyeer de student)\n- Wees specifiek: verwijs naar concrete elementen in het werk\n- Elke feedbacktekst per criterium: 2-3 gerichte zinnen\n- globalFeedback: 3-5 zinnen, algemeen overzicht sterke en zwakke punten\n- aandachtspunten: 2-3 concrete, actioneerbare verbeterpunten voor de VOLGENDE TO\n\nVERPLICHT: Geef UITSLUITEND een geldig JSON-object terug. GEEN markdown, GEEN backticks, GEEN uitleg. ALLEEN dit JSON-object:\n{"studentName":"naam student (extraheer uit document, of lege string)","scores":{"ind":{"l":1or2,"s":1or-1,"fb":"..."},"ts":{"l":1to5,"s":exacteScore,"fb":"..."},"il":{"l":1to5,"s":exacteScore,"fb":"..."},"vl":{"l":1to5,"s":exacteScore,"fb":"..."},"br":{"l":1to5,"s":exacteScore,"fb":"..."},"eb":{"fd":bool,"gi":bool,"zr":bool,"fb":"..."},"em":{"gr":bool,"tl":bool,"fb":"..."}},"globalFeedback":"...","aandachtspunten":"..."}';
+}
+
+/* ============================================================
+   WORD-DOCUMENT GENERATOR  (verticale lay-out, score rechts)
+============================================================ */
+function wordDoc(R){
+  var sc=R.scores, tot=R.total, nm=R.naam||'_________________________';
+  var HL ='background-color:#c6efce;font-weight:bold;';
+  var HL2='background-color:#ffd7d7;font-weight:bold;';
+  var FB ='background-color:#eef4fb;';
+  var BL ='background-color:#dce6f1;';
+  // Cel-stijlen: TD=standaard, TDM=verticaal gecentreerd, TDC=gecentreerd+midden
+  var TD ='border:1px solid #999;padding:5px 7px;vertical-align:top;font-size:10pt;';
+  var TDM='border:1px solid #999;padding:5px 7px;vertical-align:middle;font-size:10pt;';
+  var TDC='border:1px solid #999;padding:5px 7px;text-align:center;vertical-align:middle;font-size:10pt;';
+  // Spacer tussen criteria
+  var SP='<tr><td colspan="3" style="background:#e8eef4;border:none;padding:3px 0;font-size:1pt">&nbsp;</td></tr>';
+
+  // ── Verticale rubricrijen: omschrijving links, score rechts ─────────────────
+  function rubricBlok(label, levs, selLv, fb) {
+    var n=levs.length, rows='';
+    levs.forEach(function(l,i){
+      var on=i+1===selLv;
+      var kleur=on?HL:'';
+      var sStr=(l.s>=0?'+':'')+l.s;
+      var sKl=l.s<0?'color:#9b1c1c;':'color:#166534;';
+      if(i===0){
+        rows+='<tr>'
+          +'<td rowspan="'+n+'" style="'+TDM+BL+'font-weight:bold;width:22%">'+label+'</td>'
+          +'<td style="'+TD+kleur+'width:71%">'+esc(l.d)+'</td>'
+          +'<td style="'+TDC+kleur+sKl+'font-weight:bold;width:7%">'+sStr+'</td>'
+          +'</tr>';
+      } else {
+        rows+='<tr>'
+          +'<td style="'+TD+kleur+'">'+esc(l.d)+'</td>'
+          +'<td style="'+TDC+kleur+sKl+'font-weight:bold;">'+sStr+'</td>'
+          +'</tr>';
+      }
+    });
+    if(fb){
+      rows+='<tr>'
+        +'<td style="'+TD+FB+'font-style:italic;font-weight:bold;color:#1e3a5f;">&#8618;&nbsp;Feedback</td>'
+        +'<td colspan="2" style="'+TD+FB+'font-style:italic;color:#334155;">'+nl2br(esc(fb))+'</td>'
+        +'</tr>';
+    }
+    return rows;
+  }
+
+  // ── Multi-selectblok (bonus/malus) ─────────────────────────────────────────
+  function multiBlok(label, items, fb, isMalus) {
+    var n=items.length, rows='';
+    items.forEach(function(item,i){
+      var kleur=item.sel?(isMalus?HL2:HL):'';
+      var sStr=(item.s>=0?'+':'')+item.s;
+      var sKl=isMalus?'color:#9b1c1c;':'color:#166534;';
+      if(i===0){
+        rows+='<tr>'
+          +'<td rowspan="'+n+'" style="'+TDM+BL+'font-weight:bold;width:22%">'+label+'</td>'
+          +'<td style="'+TD+kleur+'width:71%">'+esc(item.d)+'</td>'
+          +'<td style="'+TDC+kleur+sKl+'font-weight:bold;width:7%">'+sStr+'</td>'
+          +'</tr>';
+      } else {
+        rows+='<tr>'
+          +'<td style="'+TD+kleur+'">'+esc(item.d)+'</td>'
+          +'<td style="'+TDC+kleur+sKl+'font-weight:bold;">'+sStr+'</td>'
+          +'</tr>';
+      }
+    });
+    if(fb){
+      rows+='<tr>'
+        +'<td style="'+TD+FB+'font-style:italic;font-weight:bold;color:#1e3a5f;">&#8618;&nbsp;Feedback</td>'
+        +'<td colspan="2" style="'+TD+FB+'font-style:italic;color:#334155;">'+nl2br(esc(fb))+'</td>'
+        +'</tr>';
+    }
+    return rows;
+  }
+
+  var eb=sc.eb||{}, em=sc.em||{};
+  var allMet=(sc.ind&&sc.ind.s>=1)&&(sc.ts&&sc.ts.s>=1)&&(sc.il&&sc.il.s>=1)&&(sc.vl&&sc.vl.s>=1)&&(sc.br&&sc.br.s>=1);
+  var indL=sc.ind?sc.ind.l:1;
+
+  return "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word'>"
+    +"<head><meta charset='utf-8'><style>"
+    +"body{font-family:Calibri,Arial,sans-serif;font-size:10pt;margin:0;padding:0}"
+    +"@page{margin:2cm}table{border-collapse:collapse;width:100%}td{vertical-align:top;font-size:10pt}"
+    +"</style></head><body><table>"
+
+    // ── Koptekst ──
+    +'<tr><td colspan="3" style="background:#1e3a5f;color:white;font-weight:bold;text-align:center;padding:8px;font-size:12pt;border:2px solid #1e3a5f;">BEOORDELINGSFICHE THUISOPDRACHT (TO) BIJ HET OPO<br><span style="font-size:10pt;font-weight:normal;color:#93c5fd;">TO '+(R.toNum)+' \u2013 '+esc(TO[R.toNum]?TO[R.toNum].n:'')+'</span></td></tr>'
+
+    // ── Studentinfo ──
+    +'<tr>'
+    +'<td style="'+TD+BL+'width:22%">naam student: <b>'+esc(nm)+'</b></td>'
+    +'<td style="'+TD+BL+'">OPO: <b>'+esc(R.opo)+'</b> &nbsp;|&nbsp; beoordeeld door: Kristof De Craene &nbsp;|&nbsp; datum: '+R.datum+'</td>'
+    +'<td style="'+TDC+BL+'font-weight:bold;font-size:13pt;color:#1e3a5f;width:7%">'+tot+'/20</td>'
+    +'</tr>'
+
+    // ── Infotekst ──
+    +'<tr><td colspan="3" style="'+TD+'background:#f5f5f5;font-style:italic;font-size:9pt;color:#475569;">Voor elk beoordelingscriterium zijn een aantal punten voorzien. De eindscore is nooit meer dan 20/20 en nooit minder dan 0/20.</td></tr>'
+    +SP
+
+    // ── INDIENEN ──
+    +rubricBlok('INDIENEN',[
+      {s:1, d:'De TO is voorzien van een voorblad met de naam van de student, het onderwerp en het type thuisopdracht.'},
+      {s:-1,d:'De TO is niet voorzien van een voorblad met de naam van de student, het onderwerp en het type thuisopdracht.'}
+    ],indL,sc.ind?sc.ind.fb:'')
+    +SP
+
+    // ── TAAL & STRUCTUUR ──
+    +rubricBlok('TAAL &amp; STRUCTUUR',RUB.ts,sc.ts?sc.ts.l:3,sc.ts?sc.ts.fb:'')
+    +SP
+
+    // ── INHOUDELIJK LUIK ──
+    +rubricBlok('UITWERKING INHOUDELIJK LUIK',RUB.il,sc.il?sc.il.l:3,sc.il?sc.il.fb:'')
+    +SP
+
+    // ── VAKDIDACTISCH LUIK ──
+    +rubricBlok('UITWERKING VAKDIDACTISCH LUIK',RUB.vl,sc.vl?sc.vl.l:3,sc.vl?sc.vl.fb:'')
+    +SP
+
+    // ── BRONNEN ──
+    +rubricBlok('BRONNEN',RUB.br,sc.br?sc.br.l:3,sc.br?sc.br.fb:'')
+    +SP
+
+    // ── EXTRA BONUS ──
+    +multiBlok('EXTRA BONUS',[
+      {s:2, d:'Dit werkstuk springt in het oog door de frisse didactische uitwerking.',              sel:eb.fd},
+      {s:2, d:'Dit werkstuk springt in het oog door de inhoudelijk grondige uitwerking.',            sel:eb.gi},
+      {s:1, d:'Het geheel van het werkstuk voldoet op alle beoordelingscriteria aan de verwachtingen. (automatisch toegekend)', sel:allMet},
+      {s:1, d:'De student heeft een zelfreflectie ingediend.',                                        sel:eb.zr}
+    ],eb.fb||'',false)
+    +SP
+
+    // ── EXTRA MALUS ──
+    +multiBlok('EXTRA MALUS',[
+      {s:-1,d:'De student heeft geen zelfreflectie ingediend.',                                                                                               sel:em.gr},
+      {s:-1,d:'De student is er niet in geslaagd om zich te beperken tot de opgave (lengte van de aangeleverde teksten, aantal illustraties, aantal didactische oefeningen).',sel:em.tl}
+    ],em.fb||'',true)
+    +SP
+
+    // ── GLOBAAL ──
+    +'<tr><td style="'+TDM+BL+'font-weight:bold;width:22%">GLOBAAL</td>'
+    +'<td colspan="2" style="'+TD+'">'+nl2br(esc(R.global))+'</td></tr>'
+    +SP
+
+    // ── AANDACHTSPUNTEN ──
+    +'<tr><td style="'+TDM+BL+'font-weight:bold;width:22%">AANDACHTSPUNTEN VOOR VOLGENDE TO</td>'
+    +'<td colspan="2" style="'+TD+'">'+nl2br(esc(R.apt))+'</td></tr>'
+
+    +'</table>'
+    +'<p style="margin-top:16px;font-size:8.5pt;color:#555;font-style:italic">Deze beoordeling is tot stand gekomen met ondersteuning van AI, volgens het principe \'mens &#8211; AI &#8211; mens\'. Dit betekent dat ik de opdracht eerst zelf heb geanalyseerd, waarna de feedback met behulp van AI is geformuleerd. Tot slot heb ik de tekst persoonlijk gecontroleerd en waar nodig aangepast. (Kristof De Craene)</p>'
+    +'</body></html>';
+}
+
+/* ============================================================
+   APP-TOESTAND
+============================================================ */
+var S={file:null,opo:'',datum:today(),toNum:'',naam:'',result:null};
+
+/* ============================================================
+   FORMULIER-LOGICA
+============================================================ */
+function showErr(msg){
+  var el=document.getElementById('err');
+  if(msg){
+    el.style.display='block';
+    el.textContent=msg;
+    el.scrollIntoView({behavior:'smooth',block:'nearest'});
+  } else {
+    el.style.display='none';
+  }
+}
+
+function handleDrop(e){
+  e.preventDefault();
+  document.getElementById('dz').classList.remove('drag');
+  var f=e.dataTransfer&&e.dataTransfer.files?e.dataTransfer.files[0]:null;
+  if(f)processFile(f);
+}
+
+function handleFileSelect(e){
+  var f=e.target.files?e.target.files[0]:null;
+  if(f)processFile(f);
+}
+
+function processFile(f){
+  var nm=f.name.toLowerCase();
+  if(!nm.endsWith('.pdf')&&!nm.endsWith('.docx')){showErr('Alleen PDF of DOCX bestanden zijn toegestaan.');return;}
+  showErr('');
+  if(nm.endsWith('.pdf')){
+    readB64(f).then(function(b64){
+      S.file={name:f.name,type:'pdf',content:b64};
+      updateDZ(f.name,'PDF klaar voor analyse');
+    }).catch(function(e){showErr('Leesfout: '+e.message);});
+  } else {
+    if(window._noMammoth){showErr('DOCX-ondersteuning niet beschikbaar (geen internetverbinding voor CDN). Gebruik een PDF.');return;}
+    f.arrayBuffer().then(function(ab){
+      return mammoth.extractRawText({arrayBuffer:ab});
+    }).then(function(res){
+      if(!res.value||res.value.trim().length<50){showErr('Bestand lijkt leeg of onleesbaar.');return;}
+      S.file={name:f.name,type:'docx',content:res.value};
+      updateDZ(f.name,'Word-tekst gelezen ('+(Math.round(res.value.length/1000))+'k tekens)');
+    }).catch(function(e){showErr('Leesfout: '+e.message);});
+  }
+}
+
+function updateDZ(name,sub){
+  document.getElementById('dz').className='dz ok';
+  document.getElementById('dzic').textContent='\u2705';
+  document.getElementById('dzt').textContent=name;
+  document.getElementById('dzs').textContent=sub;
+}
+
+/* ============================================================
+   API-AANROEP
+============================================================ */
+function handleGenerate(){
+  var opo=document.getElementById('iopo').value.trim();
+  var datum=document.getElementById('idat').value;
+  var toNum=document.getElementById('ito').value;
+  var naam=document.getElementById('inm').value.trim();
+  var apiKey=getKey();
+  if(!apiKey){showErr('Voer je Gemini API-sleutel in bij stap 1.');return;}
+  if(!S.file){showErr('Upload eerst het studentenwerkstuk.');return;}
+  if(!opo){showErr('Vul het OPO in.');return;}
+  if(!toNum){showErr('Selecteer het TO-nummer.');return;}
+  showErr('');
+  S.opo=opo; S.datum=datum; S.toNum=parseInt(toNum); S.naam=naam;
+
+  document.getElementById('fp').style.display='none';
+  document.getElementById('lp').style.display='block';
+  document.getElementById('lmsg').textContent='Werkstuk voorbereiden...';
+
+  var prompt=buildPrompt(S.toNum);
+  var toName=TO[S.toNum]?TO[S.toNum].n:'';
+  var meta='TO: '+toNum+' \u2013 '+toName+'\nOPO: '+opo+'\nDatum: '+datum+(naam?'\nStudentnaam (ingegeven door lector): '+naam:'');
+  var gParts;
+
+  if(S.file.type==='pdf'){
+    document.getElementById('lmsg').textContent='PDF verzenden naar Gemini...';
+    gParts=[
+      {inlineData:{mimeType:'application/pdf',data:S.file.content}},
+      {text:'Evalueer dit studentenwerkstuk.\n'+meta}
+    ];
+  } else {
+    document.getElementById('lmsg').textContent='Tekst analyseren...';
+    var txt=S.file.content.length>80000?S.file.content.slice(0,80000)+'\n\n[tekst afgekort]':S.file.content;
+    gParts=[{text:'STUDENTENWERKSTUK ("'+S.file.name+'"):\n\n'+txt+'\n\n---\nEvalueer dit werkstuk.\n'+meta}];
+  }
+
+  document.getElementById('lmsg').textContent='Beoordeling genereren...';
+
+  var geminiUrl='https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+encodeURIComponent(apiKey);
+  fetch(geminiUrl,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      systemInstruction:{parts:[{text:prompt}]},
+      contents:[{role:'user',parts:gParts}],
+      generationConfig:{temperature:0.1,maxOutputTokens:2000}
+    })
+  }).then(function(resp){
+    if(!resp.ok){
+      return resp.json().then(function(e){
+        var msg=e.error?e.error.message:'Fout ('+resp.status+')';
+        if(resp.status===403)msg='API-sleutel ongeldig of niet geactiveerd. Controleer je sleutel in Google AI Studio.';
+        if(resp.status===429)msg='Te veel aanvragen. Wacht even en probeer opnieuw (gratis tier: max. 15/minuut).';
+        throw new Error(msg);
+      });
+    }
+    return resp.json();
+  }).then(function(data){
+    var raw='';
+    if(!data.candidates||!data.candidates[0]){
+      var br=data.promptFeedback&&data.promptFeedback.blockReason;
+      throw new Error(br?'Geblokkeerd: '+br:'Geen antwoord ontvangen. Probeer opnieuw.');
+    }
+    if(data.candidates[0].content&&data.candidates[0].content.parts){
+      for(var i=0;i<data.candidates[0].content.parts.length;i++){if(data.candidates[0].content.parts[i].text){raw=data.candidates[0].content.parts[i].text;break;}}
+    }
+    var jsonStr=extractJSON(raw);
+    if(!jsonStr)throw new Error('Geen geldige JSON ontvangen. Probeer opnieuw.');
+    var parsed;
+    try{parsed=JSON.parse(jsonStr);}catch(e){throw new Error('JSON verwerken mislukt. Probeer opnieuw.');}
+    if(!parsed.scores)throw new Error('Onvolledige beoordeling ontvangen. Probeer opnieuw.');
+
+    // Normalize to compact score keys
+    var sc=parsed.scores;
+    var norm={};
+    // ind
+    var indRaw=sc.ind||sc.indienen||{};
+    norm.ind={l:indRaw.l||indRaw.level||1,s:indRaw.s!==undefined?indRaw.s:(indRaw.score!==undefined?indRaw.score:1),fb:indRaw.fb||indRaw.feedback||''};
+    // Ensure indienen score is +1 (not 0) for level 1
+    if(norm.ind.l===1&&norm.ind.s===0)norm.ind.s=1;
+    // ts
+    var tsRaw=sc.ts||sc.taalStructuur||{};
+    norm.ts={l:tsRaw.l||tsRaw.level||3,s:tsRaw.s||(tsRaw.score!==undefined?tsRaw.score:0),fb:tsRaw.fb||tsRaw.feedback||''};
+    // il
+    var ilRaw=sc.il||sc.inhoudelijkLuik||{};
+    norm.il={l:ilRaw.l||ilRaw.level||3,s:ilRaw.s||(ilRaw.score!==undefined?ilRaw.score:3),fb:ilRaw.fb||ilRaw.feedback||''};
+    // vl
+    var vlRaw=sc.vl||sc.vakdidactischLuik||{};
+    norm.vl={l:vlRaw.l||vlRaw.level||3,s:vlRaw.s||(vlRaw.score!==undefined?vlRaw.score:3),fb:vlRaw.fb||vlRaw.feedback||''};
+    // br
+    var brRaw=sc.br||sc.bronnen||{};
+    norm.br={l:brRaw.l||brRaw.level||3,s:brRaw.s||(brRaw.score!==undefined?brRaw.score:1),fb:brRaw.fb||brRaw.feedback||''};
+    // eb
+    var ebRaw=sc.eb||sc.extraBonus||{};
+    norm.eb={fd:!!(ebRaw.fd||ebRaw.frisseDidactiek),gi:!!(ebRaw.gi||ebRaw.grondigeInhoud),zr:!!(ebRaw.zr||ebRaw.zelfreflectie),ac:false,fb:ebRaw.fb||ebRaw.feedback||''};
+    // em
+    var emRaw=sc.em||sc.extraMalus||{};
+    norm.em={gr:!!(emRaw.gr||emRaw.geenReflectie),tl:!!(emRaw.tl||emRaw.teLang),fb:emRaw.fb||emRaw.feedback||''};
+
+    if(naam)parsed.studentName=naam;
+    S.result={
+      naam:parsed.studentName||'',
+      opo:opo,datum:datum,toNum:S.toNum,
+      scores:norm,
+      total:calcScore(norm),
+      global:parsed.globalFeedback||'',
+      apt:parsed.aandachtspunten||''
+    };
+    showResult();
+  }).catch(function(e){
+    document.getElementById('lp').style.display='none';
+    document.getElementById('fp').style.display='block';
+    var msg=e.message||'Onbekende fout.';
+    if(msg.indexOf('Failed to fetch')>=0||msg.indexOf('NetworkError')>=0||msg.indexOf('CORS')>=0){
+      msg='Netwerkfout: kon de Anthropic API niet bereiken. Controleer je internetverbinding. Als je het bestand lokaal opent, probeer het via een lokale server (zie readme).';
+    }
+    showErr(msg);
+  });
+}
+
+/* ============================================================
+   RESULTAAT WEERGEVEN
+============================================================ */
+function scoreColor(s){
+  if(s>=16)return{bg:'#dcfce7',col:'#15803d',brd:'#86efac'};
+  if(s>=12)return{bg:'#dbeafe',col:'#1d4ed8',brd:'#93c5fd'};
+  if(s>=8)return{bg:'#fef9c3',col:'#854d0e',brd:'#fde047'};
+  return{bg:'#fee2e2',col:'#b91c1c',brd:'#fca5a5'};
+}
+
+function critCard(key,title,levs,sc,isBad){
+  var cur=sc[key]||{l:3,s:0,fb:''};
+  var scoreStr=(cur.s>0?'+':'')+cur.s;
+  var scoreCol=cur.s<0?'#b91c1c':cur.s>0?'#15803d':'#475569';
+  var btns='';
+  if(levs){
+    levs.forEach(function(l,i){
+      var on=i+1===cur.l;
+      btns+='<button class="lb'+(on?' on':'')+'" onclick="updLevel(\''+key+'\','+(i+1)+')"><span class="ls" style="color:'+(l.s<0?'#b91c1c':'#15803d')+'">'+( l.s>=0?'+':'' )+l.s+'</span>'+esc(l.d)+'</button>';
+    });
+  } else {
+    btns='<button class="lb'+(cur.l===1?' on':'')+'" onclick="updLevel(\'ind\',1)"><span class="ls" style="color:#15803d">+1</span>Voorblad aanwezig (naam student, onderwerp, type TO)</button>'
+        +'<button class="lb'+(cur.l===2?' onb':'')+'" onclick="updLevel(\'ind\',2)"><span class="ls" style="color:#b91c1c">-1</span>Voorblad ontbreekt</button>';
+  }
+  return '<div class="crit" id="crit-'+key+'">'
+    +'<div class="ch"><span class="cn">'+title+'</span><span class="cs" style="color:'+scoreCol+'">'+scoreStr+'</span></div>'
+    +'<div class="cb">'+btns
+    +'<textarea class="fba" placeholder="Feedback voor de student (verschijnt in het Word-document)..." oninput="autoH(this);updFb(\''+key+'\',this.value)">'+esc(cur.fb)+'</textarea>'
+    +'</div></div>';
+}
+
+function showResult(){
+  document.getElementById('lp').style.display='none';
+  document.getElementById('fp').style.display='none';
+  var R=S.result;
+  var sc=R.scores;
+  var col=scoreColor(R.total);
+  var toName=TO[R.toNum]?TO[R.toNum].n:'TO '+R.toNum;
+  var tags=[
+    {l:'Ind',s:sc.ind?sc.ind.s:0},{l:'Taal',s:sc.ts?sc.ts.s:0},{l:'Inhoud',s:sc.il?sc.il.s:0},
+    {l:'Did.',s:sc.vl?sc.vl.s:0},{l:'Bronnen',s:sc.br?sc.br.s:0},
+    {l:'Bonus',s:(sc.eb?(sc.eb.fd?2:0)+(sc.eb.gi?2:0)+(sc.eb.zr?1:0)+(sc.eb.ac?1:0):0)},
+    {l:'Malus',s:(sc.em?(sc.em.gr?-1:0)+(sc.em.tl?-1:0):0)}
+  ];
+  var tagsHtml=tags.map(function(t){
+    return '<span class="stag" style="background:'+(t.s<0?'#fee2e2':'#f0fdf4')+';color:'+(t.s<0?'#b91c1c':'#15803d')+'">'+t.l+': '+(t.s>0?'+':'')+t.s+'</span>';
+  }).join('');
+
+  var ebSc=(sc.eb?(sc.eb.fd?2:0)+(sc.eb.gi?2:0)+(sc.eb.zr?1:0):0)+(sc.eb&&sc.eb.ac?1:0);
+  var emSc=sc.em?(sc.em.gr?-1:0)+(sc.em.tl?-1:0):0;
+
+  var html='<div class="card">'
+    +'<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px">'
+    +'<div>'
+    +'<div style="font-size:21px;font-weight:800;color:#1e3a5f">'+esc(R.naam||'(naam niet herkend)')+'</div>'
+    +'<div style="color:#64748b;font-size:12px;margin-top:3px">TO '+R.toNum+': '+esc(toName)+'</div>'
+    +'<div style="color:#94a3b8;font-size:11px">OPO: '+esc(R.opo)+' &middot; '+R.datum+'</div>'
+    +'<div class="stags">'+tagsHtml+'</div>'
+    +'</div>'
+    +'<div id="badge" style="width:75px;height:75px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:25px;font-weight:800;flex-shrink:0;border:4px solid '+col.brd+';background:'+col.bg+';color:'+col.col+'">'+R.total+'</div>'
+    +'</div></div>'
+
+    +'<div class="card">'
+    +'<div class="ct">&#128203; Beoordeling per criterium <span style="font-weight:400;font-size:11px;color:#94a3b8">(klik op een niveau om te wijzigen)</span></div>'
+    +critCard('ind','INDIENEN',null,sc,false)
+    +critCard('ts','TAAL &amp; STRUCTUUR',RUB.ts,sc,false)
+    +critCard('il','UITWERKING INHOUDELIJK LUIK',RUB.il,sc,false)
+    +critCard('vl','UITWERKING VAKDIDACTISCH LUIK',RUB.vl,sc,false)
+    +critCard('br','BRONNEN',RUB.br,sc,false)
+
+    +'<div class="crit" id="crit-eb">'
+    +'<div class="ch"><span class="cn">EXTRA BONUS</span><span class="cs" style="color:#15803d">+'+(ebSc)+'</span></div>'
+    +'<div class="cb">'
+    +'<label class="ckr"><input type="checkbox" id="cb-fd" '+(sc.eb&&sc.eb.fd?'checked':'')+' onchange="updCB(\'fd\',this.checked)"><span><strong style="color:#15803d">+2</strong> &ndash; Frisse didactische uitwerking</span></label>'
+    +'<label class="ckr"><input type="checkbox" id="cb-gi" '+(sc.eb&&sc.eb.gi?'checked':'')+' onchange="updCB(\'gi\',this.checked)"><span><strong style="color:#15803d">+2</strong> &ndash; Inhoudelijk grondige uitwerking</span></label>'
+    +'<div style="padding:4px 0 6px;font-size:11px;color:#475569;border-top:1px solid #f1f5f9;margin-top:4px;padding-top:6px"><strong style="color:#15803d">+1</strong> &ndash; Voldoet op alle criteria aan de verwachtingen &nbsp;<span id="ac-indicator" style="font-style:italic;font-size:10px;color:'+(sc.eb&&sc.eb.ac?'#15803d':'#94a3b8')+'">'+(sc.eb&&sc.eb.ac?'&#10003; automatisch toegekend':'&#10007; nog niet van toepassing')+'</span></div>'
+    +'<label class="ckr"><input type="checkbox" id="cb-zr" '+(sc.eb&&sc.eb.zr?'checked':'')+' onchange="updCB(\'zr\',this.checked)"><span><strong style="color:#15803d">+1</strong> &ndash; Zelfreflectie ingediend</span></label>'
+    +'<textarea class="fba" placeholder="Toelichting bonus (optioneel)..." oninput="autoH(this);updFb(\'eb\',this.value)">'+esc(sc.eb?sc.eb.fb:'')+'</textarea>'
+    +'</div></div>'
+
+    +'<div class="crit" id="crit-em">'
+    +'<div class="ch"><span class="cn">EXTRA MALUS</span><span class="cs" style="color:#b91c1c">'+(emSc)+'</span></div>'
+    +'<div class="cb">'
+    +'<label class="ckr"><input type="checkbox" id="cb-gr" '+(sc.em&&sc.em.gr?'checked':'')+' onchange="updCM(\'gr\',this.checked)"><span><strong style="color:#b91c1c">-1</strong> &ndash; Geen zelfreflectie ingediend</span></label>'
+    +'<label class="ckr"><input type="checkbox" id="cb-tl" '+(sc.em&&sc.em.tl?'checked':'')+' onchange="updCM(\'tl\',this.checked)"><span><strong style="color:#b91c1c">-1</strong> &ndash; Niet geslaagd om zich te beperken tot de opgave</span></label>'
+    +'<textarea class="fba" placeholder="Toelichting malus (optioneel)..." oninput="autoH(this);updFb(\'em\',this.value)">'+esc(sc.em?sc.em.fb:'')+'</textarea>'
+    +'</div></div>'
+
+    +'</div>'
+
+    +'<div class="card"><div class="ct">&#128172; Globaal</div>'
+    +'<textarea id="ta-global" style="width:100%;font-size:13px;resize:none;overflow:hidden;border:1px solid #cbd5e1;border-radius:6px;padding:8px 10px;background:#f8fafc;font-family:inherit;box-sizing:border-box" oninput="autoH(this);S.result.global=this.value">'+esc(R.global)+'</textarea></div>'
+
+    +'<div class="card"><div class="ct">&#128204; Aandachtspunten voor volgende TO</div>'
+    +'<textarea id="ta-apt" style="width:100%;font-size:13px;resize:none;overflow:hidden;border:1px solid #cbd5e1;border-radius:6px;padding:8px 10px;background:#f8fafc;font-family:inherit;box-sizing:border-box" oninput="autoH(this);S.result.apt=this.value">'+esc(R.apt)+'</textarea></div>'
+
+    +'<div class="ab">'
+    +'<button class="btn btn-o" onclick="resetApp()">&#128203; Nieuwe opdracht</button>'
+    +'<button class="btn btn-g" onclick="doDownload()">&#8595; Download als Word (.doc)</button>'
+    +'</div>'
+    +'<p class="anote">Controleer en pas de beoordeling aan waar nodig v&oacute;&oacute;r je downloadt.</p>';
+
+  document.getElementById('rp').innerHTML=html;
+  // Stel alle tekstvakjes meteen op volledige hoogte in
+  setTimeout(autoHAll, 0);
+}
+
+/* ============================================================
+   UPDATE-FUNCTIES (bij bewerking)
+============================================================ */
+function updScore(){
+  var R=S.result;
+  R.total=calcScore(R.scores); // also auto-sets sc.eb.ac
+  var col=scoreColor(R.total);
+  var badge=document.getElementById('badge');
+  if(badge){
+    badge.style.background=col.bg;badge.style.color=col.col;badge.style.borderColor=col.brd;
+    badge.textContent=R.total;
+  }
+  var sc=R.scores;
+  var ebSc=(sc.eb?(sc.eb.fd?2:0)+(sc.eb.gi?2:0)+(sc.eb.zr?1:0):0)+(sc.eb&&sc.eb.ac?1:0);
+  var emSc=(sc.em?(sc.em.gr?-1:0)+(sc.em.tl?-1:0):0);
+  var ebH=document.querySelector('#crit-eb .cs');if(ebH)ebH.textContent='+'+(ebSc);
+  var emH=document.querySelector('#crit-em .cs');if(emH)emH.textContent=''+(emSc);
+  // Update auto allesCriteria indicator
+  var acEl=document.getElementById('ac-indicator');
+  if(acEl){acEl.textContent=sc.eb&&sc.eb.ac?'✓ automatisch toegekend':'✗ nog niet van toepassing';acEl.style.color=sc.eb&&sc.eb.ac?'#15803d':'#94a3b8';}
+}
+
+function updLevel(key,lv){
+  var sc=S.result.scores;
+  if(key==='ind'){
+    sc.ind.l=lv;sc.ind.s=lv===1?1:-1;
+  } else {
+    var levs=RUB[key];
+    if(!levs)return;
+    sc[key].l=lv;sc[key].s=levs[lv-1].s;
+  }
+  var card=document.getElementById('crit-'+key);
+  if(card){
+    var btns=card.querySelectorAll('.lb');
+    btns.forEach(function(b,i){
+      b.className='lb'+(i+1===lv?(key==='ind'&&lv===2?' onb':' on'):'');
+    });
+    var csEl=card.querySelector('.cs');
+    if(csEl){
+      var sv=sc[key].s;
+      csEl.style.color=sv<0?'#b91c1c':sv>0?'#15803d':'#475569';
+      csEl.textContent=(sv>0?'+':'')+sv;
+    }
+  }
+  updScore();
+}
+
+function updFb(key,val){S.result.scores[key].fb=val;}
+
+// Auto-hoogte voor tekstvakjes
+function autoH(el){el.style.height='auto';el.style.height=(el.scrollHeight+2)+'px';}
+function autoHAll(){document.querySelectorAll('.fba,#ta-global,#ta-apt').forEach(function(el){autoH(el);});}
+
+function updCB(field,val){
+  var sc=S.result.scores;
+  sc.eb[field]=val;
+  // Wederzijdse uitsluiting: zelfreflectie bonus <-> geen zelfreflectie malus
+  if(field==='zr'&&val){
+    sc.em.gr=false;
+    var cbGr=document.getElementById('cb-gr');
+    if(cbGr)cbGr.checked=false;
+  }
+  updScore();
+}
+
+function updCM(field,val){
+  var sc=S.result.scores;
+  sc.em[field]=val;
+  // Wederzijdse uitsluiting: geen zelfreflectie malus <-> zelfreflectie bonus
+  if(field==='gr'&&val){
+    sc.eb.zr=false;
+    var cbZr=document.getElementById('cb-zr');
+    if(cbZr)cbZr.checked=false;
+  }
+  updScore();
+}
+
+/* ============================================================
+   DOWNLOAD
+============================================================ */
+function doDownload(){
+  var R=S.result;
+  if(!R){alert('Geen resultaat beschikbaar.');return;}
+  var tg=document.getElementById('ta-global');if(tg)R.global=tg.value;
+  var ta=document.getElementById('ta-apt');if(ta)R.apt=ta.value;
+  try{
+    var html=wordDoc(R);
+    var blob=new Blob([html],{type:'application/vnd.ms-word'});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');
+    a.style.display='none';
+    a.href=url;
+    var raw=R.naam||'student';
+    var sn=raw.replace(/[àáâãäå]/gi,'a').replace(/[èéêë]/gi,'e').replace(/[ìíîï]/gi,'i')
+           .replace(/[òóôõö]/gi,'o').replace(/[ùúûü]/gi,'u').replace(/[^a-zA-Z0-9 ]/g,'')
+           .replace(/\s+/g,'_').slice(0,30)||'student';
+    a.download='beoordelingsfiche_'+sn+'_TO'+R.toNum+'.doc';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(url);},3000);
+  }catch(err){
+    alert('Fout bij aanmaken document: '+err.message);
+  }
+}
+
+/* ============================================================
+   RESET
+============================================================ */
+function resetApp(){
+  S.file=null;S.result=null;S.toNum='';S.naam='';
+  document.getElementById('rp').innerHTML='';
+  document.getElementById('ito').value='';
+  document.getElementById('inm').value='';
+  document.getElementById('dz').className='dz';
+  document.getElementById('dzic').textContent='\u{1F4C2}';
+  document.getElementById('dzt').textContent='Sleep een PDF of DOCX hierheen, of klik om te bladeren';
+  document.getElementById('dzs').textContent='PDF aanbevolen voor documenten met afbeeldingen';
+  document.getElementById('fi').value='';
+  showErr('');
+  document.getElementById('fp').style.display='block';
+}
+
+/* ============================================================
+   INITIALISATIE
+============================================================ */
+
+/* ============================================================
+   GEMINI API-SLEUTEL BEHEER
+============================================================ */
+function getKey(){return lg('toatje_api_key');}
+
+function saveKey(){
+  var k=document.getElementById('ikey').value.trim();
+  if(!k){showErr('Vul een API-sleutel in.');return;}
+  if(!k.startsWith('AIza')){showErr('Geen geldige Google API-sleutel (begint met "AIza...").');return;}
+  ls('toatje_api_key',k);
+  document.getElementById('ikey').value='';
+  showKeyRow(true);
+  showErr('');
+}
+
+function clearKey(){
+  try{localStorage.removeItem('toatje_api_key');}catch(e){}
+  showKeyRow(false);
+}
+
+function toggleKeyVis(){
+  var inp=document.getElementById('ikey');
+  var btn=document.getElementById('ibtn-eye');
+  var show=inp.type==='password';
+  inp.type=show?'text':'password';
+  btn.innerHTML=show?'&#128584;':'&#128065;';
+}
+
+function showKeyRow(saved){
+  var sr=document.getElementById('key-saved-row');
+  var ir=document.getElementById('key-input-row');
+  if(saved){sr.style.display='flex';ir.style.display='none';}
+  else{sr.style.display='none';ir.style.display='block';}
+}
+
+(function init(){
+  var savedKey=lg('toatje_api_key');
+  var savedOpo=lg('vo');
+  if(savedKey){showKeyRow(true);}
+  if(savedOpo){document.getElementById('iopo').value=savedOpo;S.opo=savedOpo;}
+  document.getElementById('idat').value=today();
+
+  var sel=document.getElementById('ito');
+  for(var k in TO){
+    var opt=document.createElement('option');
+    opt.value=k;opt.textContent='TO '+k+' \u2013 '+TO[k].n;
+    sel.appendChild(opt);
+  }
+})();
+</script>
+</body>
+</html>
