@@ -123,7 +123,7 @@ input:focus,select:focus,textarea:focus{border-color:#3b82f6;background:#fff}
       <input type="text" id="inm" placeholder="Vul in als auto-herkenning niet werkt" oninput="S.naam=this.value">
     </div>
     <button class="btn btn-p" onclick="handleGenerate()">&#128269; Genereer beoordeling</button>
-    <p class="anote">Mens&ndash;AI&ndash;mens &middot; Google Gemini 2.0 Flash &middot; ~15&ndash;40 sec per opdracht</p>
+    <p class="anote">Mens&ndash;AI&ndash;mens &middot; Google Gemini 2.5 Flash &middot; ~15&ndash;40 sec per opdracht</p>
   </div>
   <!-- LADEN -->
   <div id="lp">
@@ -581,7 +581,7 @@ function handleGenerate(){
 
   document.getElementById('lmsg').textContent='Beoordeling genereren...';
 
-  var geminiUrl='https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+encodeURIComponent(apiKey);
+  var geminiUrl='https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key='+encodeURIComponent(apiKey);
   fetch(geminiUrl,{
     method:'POST',
     headers:{'Content-Type':'application/json'},
