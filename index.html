@@ -657,7 +657,7 @@ function handleGenerate(){
     document.getElementById('fp').style.display='block';
     var msg=e.message||'Onbekende fout.';
     if(msg.indexOf('Failed to fetch')>=0||msg.indexOf('NetworkError')>=0||msg.indexOf('CORS')>=0){
-      msg='Netwerkfout: kon de Anthropic API niet bereiken. Controleer je internetverbinding. Als je het bestand lokaal opent, probeer het via een lokale server (zie readme).';
+      msg='Netwerkfout: kon de Gemini API niet bereiken. Controleer je internetverbinding.';
     }
     showErr(msg);
   });
@@ -891,10 +891,6 @@ function resetApp(){
   showErr('');
   document.getElementById('fp').style.display='block';
 }
-
-/* ============================================================
-   INITIALISATIE
-============================================================ */
 
 /* ============================================================
    GEMINI API-SLEUTEL BEHEER
