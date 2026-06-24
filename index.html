@@ -595,7 +595,8 @@ function handleGenerate(){
       return resp.json().then(function(e){
         var msg=e.error?e.error.message:'Fout ('+resp.status+')';
         if(resp.status===403)msg='API-sleutel ongeldig of niet geactiveerd. Controleer je sleutel in Google AI Studio.';
-        if(resp.status===429)msg='Te veel aanvragen. Wacht even en probeer opnieuw (gratis tier: max. 15/minuut).';
+        if(resp.status===429)msg='Te veel aanvragen. Wacht even en probeer opnieuw (gratis tier: max. 10/minuut).';
+        if(resp.status===503)msg='De Gemini-server heeft het momenteel te druk. Wacht 1\u20132 minuten en probeer opnieuw \u2014 dit is tijdelijk aan de kant van Google.';
         throw new Error(msg);
       });
     }
