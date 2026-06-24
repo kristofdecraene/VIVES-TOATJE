@@ -900,7 +900,7 @@ function getKey(){return lg('toatje_api_key');}
 function saveKey(){
   var k=document.getElementById('ikey').value.trim();
   if(!k){showErr('Vul een API-sleutel in.');return;}
-  if(!k.startsWith('AIza')){showErr('Geen geldige Google API-sleutel (begint met "AIza...").');return;}
+  if(!k.startsWith('AIza')&&!k.startsWith('AQ')){showErr('Geen geldige Google API-sleutel (begint met "AIza..." of "AQ...").');return;}
   ls('toatje_api_key',k);
   document.getElementById('ikey').value='';
   showKeyRow(true);
